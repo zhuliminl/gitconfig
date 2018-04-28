@@ -11,7 +11,7 @@ Plug 'skwp/greplace.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-" Plug 'junegunn/limelight.vim'             "文艺焦点"
+Plug 'junegunn/limelight.vim'             "文艺焦点"
 " Plug 'junegunn/goyo.vim'                  "文艺焦点背景"
 Plug 'nathanaelkane/vim-indent-guides'      "竖条缩进"
 Plug 'ashisha/image.vim'      "竖条缩进"
@@ -26,24 +26,30 @@ Plug 'hail2u/vim-css3-syntax'
 Plug 'Raimondi/delimitMate'
 Plug 'Valloric/YouCompleteMe'
 Plug 'scrooloose/nerdcommenter'
-Plug 'bronson/vim-trailing-whitespace'       "行尾空格处理"
+Plug 'bronson/vim-trailing-whitespace' "行尾空格处理"
 
 Plug 'tomasr/molokai'
-Plug 'terryma/vim-expand-region'              "区域选择"
+Plug 'terryma/vim-expand-region'       "区域选择"
 Plug 'othree/html5.vim'
-Plug 'terryma/vim-multiple-cursors'           "超级强大的插件"
+Plug 'terryma/vim-multiple-cursors'    "超级强大的插件"
 
-Plug 'ybian/smartim'                         "输入法自动切换"
+Plug 'ybian/smartim'                   "输入法自动切换"
 
 Plug 'iamcco/markdown-preview.vim'
 Plug 'suan/vim-instant-markdown'
-Plug 'kien/rainbow_parentheses.vim'           "高亮括号"
+Plug 'kien/rainbow_parentheses.vim'    "高亮括号"
+
 " Plug 'sjl/gundo.vim'
-Plug 'Lokaltog/vim-easymotion'                "终极跳转"
-Plug 'Chiel92/vim-autoformat'                 "代码美化"
-Plug 'szw/vim-maximizer'                      "窗口最大化切换"
-Plug 'terryma/vim-multiple-cursors'           "多光标操作"
+Plug 'Lokaltog/vim-easymotion'         "终极跳转"
+Plug 'Chiel92/vim-autoformat'          "代码美化"
+Plug 'szw/vim-maximizer'               "窗口最大化切换"
+
+Plug 'junegunn/vim-easy-align'         "代码美化对齐"
+Plug 'godlygeek/tabular'               "代码美化对齐"
+Plug 'thinca/vim-quickrun'             "快速运行"
+
 call plug#end()
+
 
 
 
@@ -51,10 +57,10 @@ call plug#end()
 if !exists('g:airline_symbols')
 let g:airline_symbols = {}
 endif
-let g:airline_left_sep = '▶'
-let g:airline_left_alt_sep = '❯'
-let g:airline_right_sep = '◀'
-let g:airline_right_alt_sep = '❮'
+let g:airline_left_sep       = '▶'
+let g:airline_left_alt_sep   = '❯'
+let g:airline_right_sep      = '◀'
+let g:airline_right_alt_sep  = '❮'
 let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⎇'
 
@@ -127,10 +133,13 @@ hi LineNr ctermfg=237 ctermbg=bg
 set foldcolumn=0
 hi foldcolumn guibg=bg
 hi vertsplit guifg=bg guibg=bg ctermbg=bg ctermfg=bg   " 去分割条的丑陋背景色 "
+hi Search cterm=NONE ctermfg=yellow ctermbg=237
 
 
 " ---------------Search--------------------
-set nohlsearch
+" set nohlsearch
+" 搜索高亮
+set hlsearch
 set incsearch
 
 " Greplace.vim   暂时还体会不到它的强大
@@ -162,8 +171,7 @@ nmap e 8j
 " 尝试用 a 替换 ` 这个不太好触控的键，用来快速在文件之间跳转
 nmap a `
 
-"-----------切换缓冲区--------------------
-" 映射<leader>num到num buffer
+"-----------切换tab--------------------
 map <leader>1 gt1
 map <leader>2 gt2
 map <leader>3 gt3
@@ -290,12 +298,11 @@ nmap n N
 
 "切换tab快捷键
 nmap J gT
-nmap K gt
 nmap <leader>q :tabc<cr>
 
 "快速调用搜索"
-" nmap go <esc>:Ag<space>
-nmap <leader>a <esc>:Ag<space>
+nmap go <esc>:Ag<space>
+" nmap <leader>a <esc>:Ag<space>
 
 "复制当前单词"
 nmap <leader>j yiw
@@ -315,16 +322,22 @@ imap ;; <esc>;;
 
 "jsx 单行注释
 nmap <leader>r ddO{/*<cr>*/}<esc>kp
+"
+"快速运行
+" let g:quickrun_config = {
+" \   "_" : {
+" \       "outputter" : "message",
+" \   },
+" \}
+
+" let g:quickrun_no_default_key_mappings = 1
+" nmap <Leader>r <Plug>(quickrun)
 
 "快速函数注释
 imap <leader>co /**
 
 " 快速添加 ejs 模版符号
 imap <leader>ejs <%=%><esc>hi
-
-"不会用宏的替代
-
-imap @r return<Space>(<cr>);<esc>O
 
 
 "分开对称，并缩进
@@ -366,6 +379,7 @@ vmap V (expand_region_shrink)                   " 区域选择 "
 "高级搜索定位----------------------------------------------超神级别搜索插件"
 let g:EasyMotion_smartcase = 1
 nmap s <Plug>(easymotion-s)
+" 我靠，下面几个快捷键才是最屌的啊
 map <Leader><Leader>h <Plug>(easymotion-linebackward)
 map <Leader><Leader>j <Plug>(easymotion-j)
 map <Leader><Leader>k <Plug>(easymotion-k)
@@ -430,6 +444,13 @@ au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|
 
 
 
+"--------变量对齐------------"
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
 
 "--------Auto-Commands------------"
 
@@ -451,4 +472,6 @@ nmap <leader>f :MaximizerToggle<cr>
 
 
 " 文件框架
-autocmd BufNewFile *.js r /Users/saul/.vim/skeleton/react.js
+" autocmd BufNewFile *.js r /Users/saul/.vim/skeleton/react.js
+nmap K gt
+
